@@ -20,7 +20,7 @@ const Price: FC = () => {
     seedPrice,
     setSeedPrice,
   } = useContext(AppContext);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(true);
 
   const fetchPrice = async () => {
     setIsUpdating(true);

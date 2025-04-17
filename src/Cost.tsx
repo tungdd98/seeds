@@ -30,11 +30,7 @@ const Cost: FC = () => {
 
   const daysToEarnHasBoost = useMemo(() => {
     if (costHasBoost > 0 && lovePerDay > 0) {
-      return Math.ceil(
-        Math.ceil(costHasBoost / (lovePerDay * lovePrice)) +
-          7 +
-          totalHoursToUpgrade / 24
-      );
+      return Math.ceil(Math.ceil(costHasBoost / (lovePerDay * lovePrice)) + 7);
     }
     return 0;
   }, [costHasBoost, lovePerDay, totalHoursToUpgrade, lovePrice]);

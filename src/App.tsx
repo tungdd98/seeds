@@ -49,6 +49,7 @@ const generateFibonacciUntil = (threshold: number) => {
 
 export default function AgingFibonacciTracker() {
   const [energyPerHunt, setEnergyPerHunt] = useState(10);
+  const [earn, setEarn] = useState(100);
 
   const stats = useMemo(() => {
     const statsArr: any = [];
@@ -102,6 +103,15 @@ export default function AgingFibonacciTracker() {
           margin="normal"
         />
 
+        <TextField
+          label="SLOVE mỗi lần đi săn"
+          type="number"
+          value={earn}
+          onChange={(e) => setEarn(Number(e.target.value))}
+          fullWidth
+          margin="normal"
+        />
+
         <Typography variant="body2" gutterBottom>
           Số ngày đi săn tối đa: {stats.length}
         </Typography>
@@ -122,7 +132,7 @@ export default function AgingFibonacciTracker() {
                   <TableCell>{row.age}</TableCell>
                   <TableCell>{row.totalEnergyLost}</TableCell>
                   <TableCell>{row.resourceMultiplier}</TableCell>
-                  <TableCell>{row.resourceGain}</TableCell>
+                  <TableCell>{(row.resourceGain * earn) / 100}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

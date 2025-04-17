@@ -1,16 +1,11 @@
-import React, { useState, useMemo } from "react";
-import {
-  TextField,
-  Container,
-  Typography,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-} from "@mui/material";
+import React, { createContext, FC, useMemo, useState } from "react";
+import { Box, Tabs, Tab, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AgingFibonacciTracker from "./AgingFibonacciTracker";
+import EnergyMons from "./EnergyMons";
+import Price from "./Price";
+import LevelMons from "./LevelMons";
+import Cost from "./Cost";
 
 const theme = createTheme({
   palette: {
@@ -23,7 +18,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: [
-      "Raleway",
+      "Montserrat",
       "-apple-system",
       "BlinkMacSystemFont",
       '"Segoe UI"',
@@ -38,107 +33,113 @@ const theme = createTheme({
   },
 });
 
-// Generate Fibonacci sequence until the next term reaches the specified threshold
-const generateFibonacciUntil = (threshold: number) => {
-  const fib = [1, 1];
-  while (fib[fib.length - 1] < threshold) {
-    fib.push(fib[fib.length - 1] + fib[fib.length - 2]);
-  }
-  return fib;
+type AppContextProps = {
+  suiPrice: number;
+  lovePrice: number;
+  seedPrice: number;
+  costNoBoost: number;
+  costHasBoost: number;
+  totalHoursToUpgrade: number;
+  setSuiPrice: React.Dispatch<React.SetStateAction<number>>;
+  setLovePrice: React.Dispatch<React.SetStateAction<number>>;
+  setSeedPrice: React.Dispatch<React.SetStateAction<number>>;
+  setCostNoBoost: React.Dispatch<React.SetStateAction<number>>;
+  setCostHasBoost: React.Dispatch<React.SetStateAction<number>>;
+  setTotalHoursToUpgrade: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function AgingFibonacciTracker() {
-  const [energyPerHunt, setEnergyPerHunt] = useState(10);
-  const [earn, setEarn] = useState(100);
+export const AppContext = createContext<AppContextProps>({
+  suiPrice: 2,
+  lovePrice: 0.09,
+  seedPrice: 0.0003,
+  costNoBoost: 0,
+  costHasBoost: 0,
+  totalHoursToUpgrade: 0,
+  setSuiPrice: () => {},
+  setLovePrice: () => {},
+  setSeedPrice: () => {},
+  setCostNoBoost: () => {},
+  setCostHasBoost: () => {},
+  setTotalHoursToUpgrade: () => {},
+});
 
-  const stats = useMemo(() => {
-    const statsArr: any = [];
-    if (energyPerHunt <= 0) return statsArr;
+export const AppContextProvider: FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [suiPrice, setSuiPrice] = useState(2);
+  const [lovePrice, setLovePrice] = useState(0.09);
+  const [seedPrice, setSeedPrice] = useState(0.0003);
+  const [costNoBoost, setCostNoBoost] = useState(0);
+  const [costHasBoost, setCostHasBoost] = useState(0);
+  const [totalHoursToUpgrade, setTotalHoursToUpgrade] = useState(0);
 
-    const baseResource = 100;
-    // Build Fibonacci until reduction percent can zero out resource
-    const fib = generateFibonacciUntil(100);
+  const value = useMemo(() => {
+    return {
+      suiPrice,
+      lovePrice,
+      setSuiPrice,
+      setLovePrice,
+      seedPrice,
+      setSeedPrice,
+      costNoBoost,
+      setCostNoBoost,
+      costHasBoost,
+      setCostHasBoost,
+      totalHoursToUpgrade,
+      setTotalHoursToUpgrade,
+    };
+  }, [
+    suiPrice,
+    lovePrice,
+    seedPrice,
+    setSuiPrice,
+    setLovePrice,
+    setSeedPrice,
+    costNoBoost,
+    setCostNoBoost,
+    costHasBoost,
+    setCostHasBoost,
+    totalHoursToUpgrade,
+    setTotalHoursToUpgrade,
+  ]);
 
-    let totalEnergyLost = 0;
-    let age = 0;
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};
 
-    // Loop until resourceGain falls to zero
-    while (true) {
-      totalEnergyLost += energyPerHunt;
-      if (totalEnergyLost >= (age + 1) * 100) {
-        age++;
-      }
+const App: FC = () => {
+  const [tabIndex, setTabIndex] = useState("1");
 
-      const reductionPercent = age === 0 ? 0 : fib[age - 1];
-      const resourceMultiplier = Math.max(0, 1 - reductionPercent / 100);
-      const resourceGain = baseResource * resourceMultiplier;
-
-      statsArr.push({
-        age,
-        totalEnergyLost,
-        resourceMultiplier: (resourceMultiplier * 100).toFixed(2) + "%",
-        resourceGain: resourceGain.toFixed(2),
-      });
-
-      // Stop when resource can no longer be harvested
-      if (resourceGain <= 0) break;
-    }
-
-    return statsArr;
-  }, [energyPerHunt]);
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+    setTabIndex(newValue);
+  };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container>
-        <Typography variant="h4" gutterBottom>
-          Fibonacci Aging & Resource Tracker
-        </Typography>
+    <AppContextProvider>
+      <ThemeProvider theme={theme}>
+        <Container>
+          <Box sx={{ width: "100%", typography: "body1" }}>
+            <Tabs value={tabIndex} onChange={handleChangeTab}>
+              <Tab value="1" label="Tuổi của Mons" />
+              <Tab value="2" label="Năng lượng" />
+              <Tab value="3" label="Nâng cấp" />
+              <Tab value="4" label="Chi phí" />
+            </Tabs>
+          </Box>
 
-        <TextField
-          label="Năng lượng tiêu hao mỗi lần đi săn"
-          type="number"
-          value={energyPerHunt}
-          onChange={(e) => setEnergyPerHunt(Number(e.target.value))}
-          fullWidth
-          margin="normal"
-        />
+          <Price />
 
-        <TextField
-          label="SLOVE mỗi lần đi săn"
-          type="number"
-          value={earn}
-          onChange={(e) => setEarn(Number(e.target.value))}
-          fullWidth
-          margin="normal"
-        />
-
-        <Typography variant="body2" gutterBottom>
-          Số ngày đi săn tối đa: {stats.length}
-        </Typography>
-
-        <Paper elevation={3} style={{ marginTop: 20 }}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ fontWeight: 900 }}>
-                <TableCell>Tuổi</TableCell>
-                <TableCell>Tổng năng lượng đã mất</TableCell>
-                <TableCell>Tài nguyên còn lại (%)</TableCell>
-                <TableCell>Tài nguyên săn được</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {stats.map((row: any, idx: number) => (
-                <TableRow key={idx}>
-                  <TableCell>{row.age}</TableCell>
-                  <TableCell>{row.totalEnergyLost}</TableCell>
-                  <TableCell>{row.resourceMultiplier}</TableCell>
-                  <TableCell>{(row.resourceGain * earn) / 100}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
-      </Container>
-    </ThemeProvider>
+          <Box sx={{ py: 5 }}>
+            {tabIndex === "1" && <AgingFibonacciTracker />}
+            {tabIndex === "2" && <EnergyMons />}
+            <Box sx={{ display: tabIndex === "3" ? "block" : "none" }}>
+              <LevelMons />
+            </Box>
+            {tabIndex === "4" && <Cost />}
+          </Box>
+        </Container>
+      </ThemeProvider>
+    </AppContextProvider>
   );
-}
+};
+
+export default App;

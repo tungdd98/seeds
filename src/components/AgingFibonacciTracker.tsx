@@ -60,24 +60,30 @@ const AgingFibonacciTracker: FC = () => {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
+      <Typography
+        variant='h4'
+        gutterBottom>
         Tuổi của Mons
       </Typography>
 
       <TextField
-        label="Năng lượng tiêu hao mỗi lần đi săn"
-        type="number"
+        label='Năng lượng tiêu hao mỗi lần đi săn'
+        type='number'
         value={energyPerHunt}
         onChange={(e) => setEnergyPerHunt(Number(e.target.value))}
         fullWidth
-        margin="normal"
+        margin='normal'
       />
 
-      <Typography variant="body2" gutterBottom>
+      <Typography
+        variant='body2'
+        gutterBottom>
         Số ngày đi săn tối đa: {stats.length}
       </Typography>
 
-      <Paper elevation={3} style={{ marginTop: 20 }}>
+      <Paper
+        elevation={3}
+        style={{ marginTop: 20 }}>
         <Table>
           <TableHead>
             <TableRow sx={{ fontWeight: 900 }}>

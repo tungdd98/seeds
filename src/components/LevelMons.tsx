@@ -5,12 +5,12 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  TextField,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import React, { FC, useContext, useEffect, useMemo, useState } from "react";
-import { AppContext } from "./App";
-import { formatCurrency } from "./helpers";
+import React, { FC, useContext, useEffect, useMemo } from "react";
+import { AppContext } from "../App";
+import { formatCurrency } from "../helpers/helpers";
+import NumberInput from "./common/NumberInput";
 
 const upgradeLevels = [
   { level: 0, priceLove: 0, priceSeed: 0, timeHour: 0 },
@@ -55,16 +55,18 @@ const LevelMons: FC = () => {
     setCostNoBoost,
     setCostHasBoost,
     setTotalHoursToUpgrade,
+    currentLevel,
+    upgradeLevel,
+    setCurrentLevel,
+    setUpgradeLevel,
   } = useContext(AppContext);
-  const [currentLevel, setCurrentLevel] = useState(0);
-  const [upgradeLevel, setUpgradeLevel] = useState(10);
 
   const loveNeedToUpgrade = useMemo(() => {
     if (currentLevel < upgradeLevel) {
-      const totalSlove = upgradeLevels
+      const totalLove = upgradeLevels
         .slice(currentLevel + 1, upgradeLevel + 1)
         .reduce((sum, level) => sum + level.priceLove, 0);
-      return totalSlove;
+      return totalLove;
     }
     return 0;
   }, [currentLevel, upgradeLevel]);
@@ -109,7 +111,9 @@ const LevelMons: FC = () => {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
+      <Typography
+        variant='h4'
+        gutterBottom>
         Nâng cấp
       </Typography>
       <TableContainer component={Paper}>
@@ -118,24 +122,20 @@ const LevelMons: FC = () => {
             <TableRow>
               <TableCell>Level hiện tại</TableCell>
               <TableCell>
-                <TextField
-                  type="number"
-                  size="small"
+                <NumberInput
+                  size='small'
                   value={currentLevel}
-                  onChange={(e) => setCurrentLevel(Number(e.target.value))}
-                  inputProps={{ min: 0 }}
+                  onChange={(value) => setCurrentLevel(Number(value))}
                 />
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Level cần nâng cấp</TableCell>
               <TableCell>
-                <TextField
-                  type="number"
-                  size="small"
+                <NumberInput
+                  size='small'
                   value={upgradeLevel}
-                  onChange={(e) => setUpgradeLevel(Number(e.target.value))}
-                  inputProps={{ min: 0 }}
+                  onChange={(value) => setUpgradeLevel(Number(value))}
                 />
               </TableCell>
             </TableRow>

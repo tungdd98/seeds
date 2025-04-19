@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import { AppContext } from "./App";
+import { AppContext } from "../App";
 import { Box, Button, Typography } from "@mui/material";
-import { formatCurrency } from "./helpers";
+import { formatCurrency } from "../helpers/helpers";
 
 const options = {
   method: "GET",
@@ -47,28 +47,36 @@ const Price: FC = () => {
   return (
     <Box sx={{ marginTop: 3 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 3 }}>
-        <Typography variant="h4">Giá (USDT)</Typography>
-        <Button variant="contained" onClick={fetchPrice} disabled={isUpdating}>
+        <Typography variant='h4'>Giá (USDT)</Typography>
+        <Button
+          variant='contained'
+          onClick={fetchPrice}
+          disabled={isUpdating}>
           Cập nhật
         </Button>
       </Box>
       <Box sx={{ minHeight: 80 }}>
         {isUpdating ? (
-          <Typography variant="caption">Đang cập nhật...</Typography>
+          <Typography variant='caption'>Đang cập nhật...</Typography>
         ) : (
           <>
-            <Typography variant="body2">
+            <Typography variant='body2'>
               SUI: {formatCurrency(suiPrice)}
             </Typography>
-            <Typography variant="body2">
+            <Typography variant='body2'>
               SLOVE: {formatCurrency(lovePrice)}
             </Typography>
-            <Typography variant="body2">
-              SEED: {formatCurrency(seedPrice)}
+            <Typography variant='body2'>
+              SEED: {formatCurrency(seedPrice, 4)}
             </Typography>
           </>
         )}
       </Box>
+      <Typography
+        variant='caption'
+        sx={{ fontStyle: "italic" }}>
+        Giá có thể sai do nhà cung cấp
+      </Typography>
     </Box>
   );
 };

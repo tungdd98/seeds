@@ -158,7 +158,9 @@ const App: FC = () => {
           <Box sx={{ width: "100%", typography: "body1" }}>
             <Tabs
               value={tabIndex}
-              onChange={handleChangeTab}>
+              onChange={handleChangeTab}
+              scrollButtons='auto'
+              variant='scrollable'>
               <Tab
                 value='1'
                 label='Tuổi của Mons'

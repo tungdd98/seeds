@@ -22,19 +22,38 @@ const Price: FC = () => {
   } = useContext(AppContext);
   const [isUpdating, setIsUpdating] = useState(true);
 
+  const savePriceToLocalStorage = (key: string, value: number) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  const loadPriceFromLocalStorage = (key: string) => {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  };
+
   const fetchPrice = async () => {
     setIsUpdating(true);
     try {
       const response = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=sui,slove,seed&vs_currencies=usd",
+        "https://api.coingecko.com/api/v3/simple/price?ids=sui,slove,seed-3&vs_currencies=usd",
         options
       );
       const data = await response.json();
+      savePriceToLocalStorage("suiPrice", data.sui.usd);
+      savePriceToLocalStorage("lovePrice", data.slove.usd);
+      savePriceToLocalStorage("seedPrice", data["seed-3"].usd);
       setSuiPrice(data.sui.usd);
       setLovePrice(data.slove.usd);
-      setSeedPrice(data.seed.usd);
+      setSeedPrice(data["seed-3"].usd);
     } catch (error) {
       console.error("Error fetching price data:", error);
+      const localSuiPrice = loadPriceFromLocalStorage("suiPrice");
+      const localLovePrice = loadPriceFromLocalStorage("lovePrice");
+      const localSeedPrice = loadPriceFromLocalStorage("seedPrice");
+      if (localSuiPrice) setSuiPrice(localSuiPrice);
+      if (localLovePrice) setLovePrice(localLovePrice);
+      if (localSeedPrice) setSeedPrice(localSeedPrice);
+      alert("Lỗi khi lấy giá từ API. Đang sử dụng giá cũ.");
     } finally {
       setIsUpdating(false);
     }
@@ -75,7 +94,7 @@ const Price: FC = () => {
       <Typography
         variant='caption'
         sx={{ fontStyle: "italic" }}>
-        Giá có thể sai do nhà cung cấp
+        Giá có thể sai do nhà cung cấp (coingecko) không cập nhật kịp thời
       </Typography>
     </Box>
   );

@@ -157,7 +157,10 @@ const LevelMons: FC = () => {
             </TableRow>
             <TableRow>
               <TableCell>Chi phí Boost</TableCell>
-              <TableCell>{formatCurrency(totalLoveToBoost)}</TableCell>
+              <TableCell>
+                {hourNeedToUpgrade * boostMons} SLOVE ~{" "}
+                {formatCurrency(totalLoveToBoost)}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>

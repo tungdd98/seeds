@@ -1,5 +1,15 @@
-body,
-html {
-  font-family: Jost, "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif !important;
+.tox .tox-statusbar {
+  display: none !important;
+}
+
+.tox.tox-tinymce {
+  border: none !important;
+}
+
+.tox .tox-editor-container {
+  /* position: relative !important; */
+}
+
+.tox .tox-edit-area::before {
+  border: none !important;
 }
